@@ -16,19 +16,13 @@ def clean_headlines() -> DataFrame:
     df: DataFrame = load_headlines()
 
     # Drop missing values
-    df.drop(inplace=True)
+    df.dropna(inplace=True)
 
     # Timestamp column name
     ts: str = 'publish_date'
 
     # Convert string timestamps to DateTime
-    df[ts] = to_datetime(df[ts], format='%y%m%d')
-
-    # Remove duplicated timestamps
-    df = df.drop_duplicates(ts, keep="last")
-
-    # Sort the entries by their timestamp
-    df.sort_values(ts, ascending=True, inplace=True)
+    df[ts] = to_datetime(df[ts], format='%Y%m%d')
 
     # Set the timestamp column as the index
     df.set_index(ts, inplace=True)
