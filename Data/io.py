@@ -1,9 +1,8 @@
 from dataclasses import asdict
 from json import dumps
 from opendatasets import download
-from os import path, rename, remove, mkdir
+from os import path, rename, remove
 from pandas import DataFrame, read_csv
-from requests import get
 from typing import Literal
 
 from Config import config
@@ -61,104 +60,21 @@ def load_croissant(dir_name: str) -> DataFrame:
     return load_croissant(dir_name)
 
 
-def load_bitcoin() -> DataFrame:
+def load_headlines() -> DataFrame:
     """
-    Loads the bitcoin price Data from 2017 to 2023 and returns it as a DataFrame.
+    Loads the ABC headlines data from 2003 to 2021 and returns it as a DataFrame.
     If not present locally, the dataset is downloaded.
 
     Returns:
-        DataFrame containing the training BTC data.
+        DataFrame containing the training headlines data.
 
     """
-    return load_croissant("bitcoin")
-
-
-def load_sentiment() -> DataFrame:
-    """
-        Loads the sentiment of the market from 2017 to 2023 and returns it as a DataFrame.
-
-        Returns:
-            DataFrame containing the training sentiment data.
-
-        """
-    dir_name: str = "sentiment"
-
-    # Path to the Data file
-    dest_path: str = path.join(dir_path, dir_name)
-    cl_path: str = path.join(dest_path, f"data.csv")
-
-    # If we have already downloaded the file, then return it.
-    if path.exists(cl_path):
-        return read_csv(cl_path)
-
-    raise AssertionError("Sentiment data does not exist")
-
-
-def load_dxy() -> DataFrame:
-    """
-    Loads the DXY (US Dollar Index) data from 2017 to 2023 and returns it as a DataFrame.
-    If not present locally, the data must be downloaded manually and placed in the dxy folder.
-
-    Returns:
-        DataFrame containing the training DXY data.
-
-    """
-    return read_csv(path.join(dir_path, "dxy", "data.csv"))
-
-
-def load_fear_greed() -> DataFrame:
-    """
-    Loads the Fear and Greed data from 2018 to 2024 and returns it as a DataFrame.
-    If not present locally, the data is downloaded from the URL in the config file.
-
-    Returns:
-        DataFrame containing the training FNG data.
-
-    """
-    dir_name: str = "fearGreed"
-
-    # Path to the Data file
-    dest_path: str = path.join(dir_path, dir_name)
-    cl_path: str = path.join(dest_path, f"data.csv")
-
-    # If we have already downloaded the file, then return it.
-    if path.exists(cl_path):
-        return read_csv(cl_path)
-
-    # Create the missing dir
-    mkdir(dest_path)
-
-    # Extract the JSON data
-    res: dict = get(
-        config.fng.historical_url,
-        proxies=config.proxies
-    ).json()["data"]
-
-    df: DataFrame = DataFrame.from_dict(res)
-
-    # Drop the useless column
-    df.drop("time_until_update", axis=1, inplace=True)
-
-    # Save the data to a CSV
-    df.to_csv(cl_path)
-
-    return df
-
-
-def load_fed_funds() -> DataFrame:
-    """
-    Loads the US federal funding rate from 1954 to 2024 and returns it as a DataFrame.
-
-    Returns:
-        DataFrame containing the training FederalRate data.
-
-    """
-    return read_csv(path.join(dir_path, "fedFunds", "data.csv"))
+    return load_croissant("headlines")
 
 
 def save_parquet(
         df: DataFrame,
-        folder: Literal['bitcoin', 'dxy', 'fedFunds', 'inflation', 'fearGreed', 'sentiment'] = '',
+        folder: Literal['headlines'] = '',
         file_name: str = None
 ) -> None:
     """
