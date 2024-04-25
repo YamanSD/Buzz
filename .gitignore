@@ -5,8 +5,8 @@
 
 *.parquet
 /config.json
-/Data/HeadLines
-!/Data/HeadLines/metadata.json
+/Data/headlines
+!/Data/headlines/metadata.json
 /kaggle.json
 
 ### JetBrains ###
