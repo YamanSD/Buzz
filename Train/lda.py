@@ -31,7 +31,10 @@ def simple_train(max_features: int, n_topics: int, data: DataFrame) -> tuple[Pip
     # Vectorize the input, then pass it to the model, & apply t-sne dimensionality reduction
     pipeline: Pipeline = Pipeline([
         ('vect', TfidfVectorizer(stop_words='english', max_features=max_features)),
-        ('model', LatentDirichletAllocation(n_components=n_topics, learning_method='online', max_iter=16))
+        ('model', LatentDirichletAllocation(n_components=n_topics,
+                                            n_jobs=-1,
+                                            verbose=3)
+         )
     ])
 
     # LDA model

@@ -1,16 +1,27 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from Data import get_data
+from pandas import options
+from Train import *
 
 
-# Press the green button in the gutter to run the script.
+def main() -> None:
+    """
+    Main function of the program.
+    :return:
+    """
+    # options.display.max_rows = 50
+    # print(get_data(True))
+    model, topic_mat, term_mat = train_lda(40_000, 10)
+    # lsa_keys = get_keys(topic_mat)
+    # lsa_cat, lsa_counts = keys_to_counts(lsa_keys)
+
+
+    # top_n_words_lsa = get_top_n_words(8, 10, lsa_keys, term_mat, model)
+
+    # for i in range(len(top_n_words_lsa)):
+    #     print("Topic {}: ".format(i + 1), top_n_words_lsa[i])
+
+    return
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
