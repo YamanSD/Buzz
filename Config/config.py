@@ -33,20 +33,6 @@ class KaggleConfig:
     key: str
 
 
-@dataclass(frozen=True)
-class FearGreedConfig:
-    """
-    Class used for Fear & Greed Index configuration.
-
-
-    historical_url: API URL used to obtain historic data.
-
-    live_url: API URL used to obtain live data.
-    """
-    historical_url: str
-    live_url: str
-
-
 class ProxiesConfig(TypedDict):
     """
     Class used for proxy configuration.
@@ -64,46 +50,6 @@ class ProxiesConfig(TypedDict):
 
 
 @dataclass(frozen=True)
-class BinanceConfig:
-    """
-    Class used for Binance API configuration.
-
-
-    url: API URL endpoint. Does not need a key.
-    """
-    url: str
-
-
-@dataclass(frozen=True)
-class AlphaVantageConfig:
-    """
-    Class used for AlphaVantage API configuration.
-
-
-    url: API endpoint.
-
-    keys: List of usable API keys.
-
-    limit: Maximum number of requests per key.
-    """
-    url: str
-    keys: list[str]
-    limit: int
-
-
-@dataclass(frozen=True)
-class ObserverConfig:
-    """
-    Class used for observation cycles configuration.
-    Each entry is measured in seconds.
-
-
-    save: Save the model if it has incremental learning.
-    """
-    save: float
-
-
-@dataclass(frozen=True)
 class ServerConfig:
     """
     Class used for web server configuration.
@@ -117,6 +63,19 @@ class ServerConfig:
 
 
 @dataclass(frozen=True)
+class TrainingConfig:
+    """
+    Class used for training configuration.
+
+
+    n_topics: Number of unique topics.
+    max_features: Maximum number of words to consider by the vectorizer.
+    """
+    n_topics: int
+    max_features: int
+
+
+@dataclass(frozen=True)
 class Config:
     """
     Class used for app configuration.
@@ -124,11 +83,8 @@ class Config:
     hf: HfConfig
     proxies: ProxiesConfig
     kaggle: KaggleConfig
-    fng: FearGreedConfig
-    binance: BinanceConfig
-    alpha_vantage: AlphaVantageConfig
-    observer: ObserverConfig
     server: ServerConfig
+    training: TrainingConfig
 
 
 def load_config(path: str) -> Config:
@@ -150,9 +106,6 @@ def load_config(path: str) -> Config:
         **data,
         "hf": convert_to_dataclass(HfConfig, data['hf']),
         "kaggle": convert_to_dataclass(KaggleConfig, data['kaggle']),
-        "fng": convert_to_dataclass(FearGreedConfig, data['fng']),
-        "binance": convert_to_dataclass(BinanceConfig, data['binance']),
-        "alpha_vantage": convert_to_dataclass(AlphaVantageConfig, data['alpha_vantage']),
-        "observer": convert_to_dataclass(ObserverConfig, data['observer']),
         "server": convert_to_dataclass(ServerConfig, data['server']),
+        "training": convert_to_dataclass(TrainingConfig, data['training']),
     })

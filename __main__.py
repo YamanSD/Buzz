@@ -115,8 +115,8 @@ def index():
             top_image=top_image,
             subjectivity=f"{analysis.sentiment.subjectivity:.2%}",
             sentiment=sentiment,
-            lsa_topic=extract_topic(lsa_model, summary),
-            lda_topic=extract_topic(lda_model, summary),
+            lsa_topic=extract_topic(lsa_model, summary).upper(),
+            lda_topic=extract_topic(lda_model, summary).upper(),
         )
 
     return render_template('index.html')
