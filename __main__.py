@@ -1,6 +1,6 @@
 import nltk
 
-from flask import Flask, request, render_template, flash, redirect, url_for  # Import flash
+from flask import Flask, request, render_template, flash, redirect, url_for
 from newspaper import Article, ArticleException
 from requests import get, RequestException
 from re import split
@@ -13,7 +13,7 @@ from Sentiment import relative_sentiment, SentimentResponse
 from Train import *
 
 
-# Download punkt sub-package
+# Download punctuation extension
 nltk.download('punkt')
 
 app: Flask = Flask(__name__)
@@ -50,16 +50,10 @@ def index():
         try:
             # Raise an HTTPError if the HTTP request returned an unsuccessful status code
             get(url).raise_for_status()
-        except RequestException:
-            flash('Failed to download the content of the URL.')
-            return redirect(url_for('index'))
 
-        article: Article = Article(url)
-
-        try:
-            # Raise an HTTPError if the HTTP request returned an unsuccessful status code
-            article.download()
-        except ArticleException:
+            # Article might fail to download
+            article: Article = Article(url)
+        except (RequestException, ArticleException):
             flash('Failed to download the content of the URL.')
             return redirect(url_for('index'))
 
@@ -102,9 +96,9 @@ def index():
         sentiment: str = "Neutral ⬛"
 
         if sentiment_res.net_sentiment() > 0:
-            sentiment = "Positive 🟩"
+            sentiment = "Positive 📈"
         elif sentiment_res.net_sentiment() < 0:
-            sentiment = "Negative 🟥"
+            sentiment = "Negative 📉"
 
         return render_template(
             'index.html',
