@@ -171,3 +171,26 @@ def apply_tsne(
         plot.add_layout(label)
 
     show(plot)
+
+
+def extract_topic(model: Pipeline, n: int, title: str) -> list[str]:
+    """
+
+    Args:
+        model: Model to use.
+        n:  Top n-words to return.
+        title: String from which to extract the topic.
+
+    Returns:
+        List of most popular words for the topic in decreasing order of popularity.
+
+    """
+    sample: ndarray = array([title.lower()])
+    vect: TfidfVectorizer = model.named_steps['vect']
+
+    return extract_top_words(
+        n,
+        get_keys(model.transform(sample)),
+        vect.transform(sample),
+        vect
+    )
