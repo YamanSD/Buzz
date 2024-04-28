@@ -23,7 +23,6 @@ lda_model: Pipeline = load_lda()
 # Model queues for multiprocessing
 lda_q: Queue = Queue()
 lsa_q: Queue = Queue()
-sent_q: Queue = Queue()
 
 
 def get_website_name(url: str) -> str:
@@ -60,20 +59,9 @@ def run(
     q.put_nowait(', '.join(extract_topic(model, 5, title)).upper())
 
 
-def get_sentiment(text: str, q: Queue) -> None:
-    """
-
-    Args:
-        text: Text to get the sentiment of.
-        q: Process queue, contains the net sentiment.
-
-    """
-    q.put_nowait(relative_sentiment(text).net_sentiment())
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    global lsa_model, lda_model, lsa_q, lda_q, sent_q
+    global lsa_model, lda_model, lsa_q, lda_q
 
     if request.method == 'POST':
         url: str = request.form['url']
@@ -125,16 +113,13 @@ def index():
         # Start LDA model
         Process(target=run, args=(summary, lda_model, lda_q)).start()
 
-        # Start the sentiment model
-        Process(target=get_sentiment, args=(summary, sent_q)).start()
-
         # Get the top image URL
         top_image: str = article.top_image
 
         analysis: TextBlob = TextBlob(article.text)
 
         # Analyze the financial sentiment of the article
-        net_sentiment: float = sent_q.get()
+        net_sentiment: float = relative_sentiment(summary).net_sentiment()
         sentiment: str = "Neutral ⬛"
 
         if net_sentiment > 0:
