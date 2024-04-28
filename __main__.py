@@ -1,21 +1,29 @@
 import nltk
+from multiprocessing import Process, Queue
 from flask import Flask, request, render_template, flash, redirect, url_for
 from newspaper import Article, ArticleException
 from requests import get, RequestException
 from re import split
+from sklearn.pipeline import Pipeline
 from textblob import TextBlob
 from urllib.parse import urlparse
 from validators import url as v_url
 
 from Config import config
-from Sentiment import relative_sentiment, SentimentResponse
-from Train import *
+from Sentiment import relative_sentiment
+from Train import load_lsa, load_lda, extract_topic
 
-
-# Download punctuation extension
-nltk.download('punkt')
 
 app: Flask = Flask(__name__)
+
+# Load the models
+lsa_model: Pipeline = load_lsa()
+lda_model: Pipeline = load_lda()
+
+# Model queues for multiprocessing
+lda_q: Queue = Queue()
+lsa_q: Queue = Queue()
+sent_q: Queue = Queue()
 
 
 def get_website_name(url: str) -> str:
@@ -36,8 +44,37 @@ def get_website_name(url: str) -> str:
     return domain
 
 
+def run(
+    title: str,
+    model: Pipeline,
+    q: Queue
+) -> None:
+    """
+
+    Args:
+        title: To feed to the model.
+        model: Model to use.
+        q: Process queue, contains the final string.
+
+    """
+    q.put_nowait(', '.join(extract_topic(model, 5, title)).upper())
+
+
+def get_sentiment(text: str, q: Queue) -> None:
+    """
+
+    Args:
+        text: Text to get the sentiment of.
+        q: Process queue, contains the net sentiment.
+
+    """
+    q.put_nowait(relative_sentiment(text).net_sentiment())
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global lsa_model, lda_model, lsa_q, lda_q, sent_q
+
     if request.method == 'POST':
         url: str = request.form['url']
 
@@ -52,6 +89,7 @@ def index():
 
             # Article might fail to download
             article: Article = Article(url)
+            article.download()
         except (RequestException, ArticleException):
             flash('Failed to download the content of the URL.')
             return redirect(url_for('index'))
@@ -77,26 +115,31 @@ def index():
 
         summary: str = ' '.join(sentences[:max_summarized_sentences])
 
+        if not len(summary):
+            flash('Please enter a valid URL.')
+            return redirect(url_for('index'))
+
+        # Start LSA model
+        Process(target=run, args=(summary, lsa_model, lsa_q)).start()
+
+        # Start LDA model
+        Process(target=run, args=(summary, lda_model, lda_q)).start()
+
+        # Start the sentiment model
+        Process(target=get_sentiment, args=(summary, sent_q)).start()
+
         # Get the top image URL
         top_image: str = article.top_image
 
         analysis: TextBlob = TextBlob(article.text)
 
-        if not len(summary):
-            flash('Please enter a valid URL.')
-            return redirect(url_for('index'))
-
         # Analyze the financial sentiment of the article
-        sentiment_res: SentimentResponse = relative_sentiment(summary)
-
-        lsa_model = load_lsa()
-        lda_model = load_lda()
-
+        net_sentiment: float = sent_q.get()
         sentiment: str = "Neutral ⬛"
 
-        if sentiment_res.net_sentiment() > 0:
+        if net_sentiment > 0:
             sentiment = "Positive 📈"
-        elif sentiment_res.net_sentiment() < 0:
+        elif net_sentiment < 0:
             sentiment = "Negative 📉"
 
         return render_template(
@@ -108,8 +151,8 @@ def index():
             top_image=top_image,
             subjectivity=f"{analysis.sentiment.subjectivity:.2%}",
             sentiment=sentiment,
-            lsa_topic=extract_topic(lsa_model, summary).upper(),
-            lda_topic=extract_topic(lda_model, summary).upper(),
+            lsa_topic=lsa_q.get(),
+            lda_topic=lda_q.get(),
         )
 
     return render_template('index.html')
@@ -118,4 +161,7 @@ def index():
 app.secret_key = config.server.secret
 
 if __name__ == '__main__':
-    app.run(debug=True, port=config.server.port)
+    # Download punctuation extension
+    nltk.download('punkt')
+
+    app.run(debug=True, port=config.server.port, use_reloader=False)

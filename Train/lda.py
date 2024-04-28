@@ -32,7 +32,6 @@ def test(n_records: int) -> None:
     vect: TfidfVectorizer = TfidfVectorizer(
         stop_words='english',
         max_features=config.training.max_features,
-        preprocessor=lambda s: sub(r"\d+", '', s)
     )
 
     # Get the samples
@@ -71,7 +70,6 @@ def simple_train(max_features: int, n_topics: int, data: DataFrame) -> tuple[Pip
         ('vect', TfidfVectorizer(
             stop_words='english',
             max_features=max_features,
-            preprocessor=lambda s: sub(r"\d+", '', s)
         )),
         ('model', LatentDirichletAllocation(n_components=n_topics,
                                             n_jobs=-1,
