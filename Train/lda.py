@@ -1,15 +1,85 @@
-from numpy import ndarray
+from bokeh.io import show
+from bokeh.models import Label
+from bokeh.plotting import figure
+from numpy import ndarray, array
 from pandas import DataFrame
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.manifold import TSNE
 from sklearn.pipeline import Pipeline
 
 from Data import get_data
 
-from .common import load as g_load, save as g_save
+from .common import load as g_load, save as g_save, get_keys, get_top_n_words, get_mean_topic_vectors
 
 # Name of the model file, without extension
 save_file: str = "lda_model"
+
+
+def test(max_features: int, n_topics: int, n_records: int) -> None:
+    """
+
+    Args:
+        max_features: Number of max features to test on.
+        n_topics: Number of topics to test on.
+        n_records: Number of records to test on.
+
+    """
+    # Part of the data set
+    data: DataFrame = get_data().sample(n_records)
+
+    # Vectorizer
+    vect: TfidfVectorizer = TfidfVectorizer(
+        stop_words='english',
+        max_features=max_features
+    )
+
+    # Get the samples
+    text_sample: ndarray = data.values.ravel()
+    term_matrix: ndarray = vect.fit_transform(text_sample)
+
+    # LDA model
+    model: LatentDirichletAllocation = LatentDirichletAllocation(
+        n_components=n_topics,
+        n_jobs=-1,
+        learning_method='online',
+        verbose=3
+    )
+
+    topic_matrix: ndarray = model.fit_transform(term_matrix)
+    keys: ndarray = get_keys(topic_matrix)
+
+    tsne_model: TSNE = TSNE(
+        n_components=2,
+        perplexity=50,
+        learning_rate=100,
+        n_iter=2000,
+        verbose=1,
+        random_state=0,
+        angle=0.75
+    )
+    tsne_lda_vectors: ndarray = tsne_model.fit_transform(topic_matrix)
+
+    # Colormap for the plot
+    colormap = array([
+        "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+        "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+        "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+        "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"])[:n_topics]
+
+    top_words: list[str] = get_top_n_words(n_topics, 3, keys, term_matrix, vect)
+
+    mean_topic_vectors = get_mean_topic_vectors(n_topics, keys, tsne_lda_vectors)
+
+    plot = figure(title="t-SNE Clustering of {} LDA Topics".format(n_topics))
+    plot.scatter(x=tsne_lda_vectors[:, 0], y=tsne_lda_vectors[:, 1], color=colormap[keys])
+
+    for t in range(n_topics):
+        label = Label(x=mean_topic_vectors[t][0], y=mean_topic_vectors[t][1],
+                      text=top_words[t], text_color=colormap[t])
+        plot.add_layout(label)
+
+    show(plot)
 
 
 def simple_train(max_features: int, n_topics: int, data: DataFrame) -> tuple[Pipeline, ndarray, ndarray]:

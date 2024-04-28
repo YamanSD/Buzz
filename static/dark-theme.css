@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
 body {
-    background-color: #0E1316; /* Dark background */
+    background-color: #3d704d; /* Dark background */
     color: #EDEDED;
     font-family: 'Poppins', sans-serif;
     scroll-behavior: smooth;
@@ -12,7 +12,7 @@ body {
 .heading {
     text-align: center;
     font-size: 3.5rem;
-    margin-top: 0;
+    margin-top: 20%;
     padding-top: 0;
 }
 
@@ -44,7 +44,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .form input[type=text] {
-    width: 40%;
+    width: 60%;
     height: 3rem;
     border: none;
     border-radius: 10px;
@@ -106,10 +106,11 @@ body::-webkit-scrollbar-thumb {
     margin-top: 4rem;
     display: flex;
     justify-content: center;
+    width: 100vw;
 }
 
 .card {
-    border: 2px solid #252930;
+    border: 2px solid #1fa777;
     width: 80vw;
     padding: 2rem;
     border-radius: 10px;
@@ -124,6 +125,7 @@ body::-webkit-scrollbar-thumb {
     margin-top: 2rem;
     text-align: center;
     font-size: 2.5rem;
+    font-weight: 800;
 }
 
 .main-wrapper {
@@ -132,7 +134,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .main-wrapper .col-1 {
-    width: 80%;
+    width: 100%;
 }
 
 .main-wrapper .col-2 {
@@ -142,7 +144,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .main-wrapper .col-2 .top-image {
-    max-width: 70%;
+    max-width: 90%;
     height: auto;
     border-radius: 20px;
 }
@@ -199,11 +201,11 @@ body::-webkit-scrollbar-thumb {
     }
 
     .form input[type=text] {
-        width: 60%;
+        width: 70%;
     }
 
     .card {
-        width: 75vw;
+        width: 80vw;
         padding: 1rem;
     }
     

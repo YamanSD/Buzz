@@ -110,8 +110,10 @@ class ServerConfig:
 
 
     port: Port number of the web server.
+    secret: Server secret for encryption.
     """
     port: int
+    secret: str
 
 
 @dataclass(frozen=True)
