@@ -33,6 +33,17 @@
 
 ## t-SNE Results
 
+[Bokeh](https://bokeh.org/) was used to generate the following plots:
+
+- [LSA](lsa.html): 
+
+![lsa](./screenshots/lsa.png)
+
+- [LDA](lda.html): 
+
+![lda](./screenshots/lda.png)
+
+Unsurprisingly, LDA does a better job at separating the articles into clusters.
 
 ## Usage
 
