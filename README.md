@@ -15,6 +15,7 @@
 - It also compares the performance of both algorithms using t-Distributed Stochastic Neighbor Embedding (TSNE) to plot the clusters. 
 - The project leverages the [Newspaper3K library](https://github.com/codelucas/newspaper) to fetch news articles, Flask for the web interface, and [FinBERT](https://huggingface.co/ProsusAI/finbert) for financial sentiment analysis. 
 - To ensure efficiency, multiprocessing is used to run each model as a separate process.
+- The [ABC "A Million News Headlines"](https://www.kaggle.com/datasets/therohk/million-headlines) dataset is used to train the models.
 
 ## Features
 
