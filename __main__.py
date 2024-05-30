@@ -123,9 +123,9 @@ def index():
         sentiment: str = "Neutral ⬛"
 
         if net_sentiment > 0:
-            sentiment = "Positive 📈"
+            sentiment = "Positive 🟩"
         elif net_sentiment < 0:
-            sentiment = "Negative 📉"
+            sentiment = "Negative 🟥"
 
         return render_template(
             'index.html',
