@@ -1,41 +1,32 @@
 # Buzz 📰
 
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
 ![Kaggle](https://img.shields.io/badge/Kaggle-035a7d?style=for-the-badge&logo=kaggle&logoColor=white)
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23ffffff.svg?style=for-the-badge&logo=Matplotlib&logoColor=black)
 ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 
-## Project Overview
+![main](./screenshots/main.png)
 
-This project aims to predict the topic of a given news article using Latent Semantic Analysis (LSA) and Latent Dirichlet Allocation (LDA). It also compares the performance of both algorithms using t-Distributed Stochastic Neighbor Embedding (TSNE). The project leverages the News3K library to fetch news articles and utilizes Flask for the web interface. To ensure efficiency, multiprocessing is used to run each model as a separate process.
+## Project Overview & Technologies
+
+- This project aims to predict the topic of a given news article using Latent Semantic Analysis (LSA) and Latent Dirichlet Allocation (LDA). 
+- It also compares the performance of both algorithms using t-Distributed Stochastic Neighbor Embedding (TSNE) to plot the clusters. 
+- The project leverages the [Newspaper3K library](https://github.com/codelucas/newspaper) to fetch news articles, Flask for the web interface, and [FinBERT](https://huggingface.co/ProsusAI/finbert) for financial sentiment analysis. 
+- To ensure efficiency, multiprocessing is used to run each model as a separate process.
 
 ## Features
 
-- **Topic Prediction**: Predicts the topic of a given news article using LSA and LDA.
-- **Performance Comparison**: Uses TSNE to compare the performance of LSA and LDA.
-- **News Fetching**: Utilizes the News3K library to fetch the latest news articles.
-- **Web Interface**: Simple HTML template to interact with the Flask server.
+- **Topic Prediction**: Predicts the topic of a given news article using LSA and LDA by spitting out predicted keywords.
+- **Web Interface**: Intuitive web interface to interact with the Flask server.
 - **Multiprocessing**: Runs each model as a separate process to enhance efficiency.
+- **Sentiment Analysis**: Uses FinBERT API to predict the sentiment of the news article.
+- **Automatic Data Fetching**: Uses Kaggle's CroissantML format to automatically download and store the data in parquet format.
 
 ## Installation
 
-1. **Clone the repository**:
-    ```sh
-    git clone https://github.com/yourusername/news-topic-prediction.git
-    cd news-topic-prediction
-    ```
-
-2. **Create and activate a virtual environment**:
-    ```sh
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
-
-3. **Install the required packages**:
-    ```sh
-    pip install -r requirements.txt
-    ```
+- ****
 
 ## Usage
 
