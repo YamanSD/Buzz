@@ -40,9 +40,7 @@
 
 - This example uses the following [link](https://www.fxstreet.com/cryptocurrencies/news/top-3-price-prediction-bitcoin-ethereum-ripple-facing-correction-after-etfs-led-rally-202405300755): 
 
-![ex0](./screenshots/ex00.png)
-
-![ex0](./screenshots/ex01.png)
+![ex0](./screenshots/ex0.png)
 
 - This example uses the following [link](https://cointelegraph.com/news/bitcoin-etfs-traditional-finance-investments), which blocks the download:
   
@@ -50,9 +48,7 @@
 
 - This example uses the following [link](https://www.coindesk.com/markets/2024/05/23/bitcoin-drops-below-68k-ether-slumps-in-sudden-crypto-sell-off-as-eth-etf-decision-looms/):
 
-![ex0](./screenshots/ex20.png)
-![ex0](./screenshots/ex21.png)
-
+![ex0](./screenshots/ex2.png)
 
 ## License
 
