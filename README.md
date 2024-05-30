@@ -31,6 +31,9 @@
 3. Install the project requirements by running the following command `pip install -r requirements.txt`.
     - Note that this project requires Python 3.11.8 and on some systems you must run `pip3 install -r requirements.txt`.
 
+## t-SNE Results
+
+
 ## Usage
 
 1. Change into the project directory and start the server by `python .` or `python3 .`
