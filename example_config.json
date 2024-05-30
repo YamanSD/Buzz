@@ -1,0 +1,23 @@
+{
+  "hf": {
+    "sentiment_token": "YOUR HUGGING FACE API TOKEN",
+    "sentiment_url": "https://api-inference.huggingface.co/models/ProsusAI/finbert"
+  },
+  "kaggle": {
+    "username": "YOUR KAGGLE USERNAME",
+    "key": "YOUR KAGGLE API KEY"
+  },
+  "proxies": {
+    "http": "socks5://localhost:9150",
+    "https": "socks5://localhost:9150",
+    "https_y": "socks5h://localhost:9150"
+  },
+  "training": {
+    "n_topics": 8,
+    "max_features": 40000
+  },
+  "server": {
+    "port": 8081,
+    "secret": "rb@E^I)A~{}7=y^7O*L|h{`v'COIE1}:A$2#W)}ItRf-<rqI`(yCF7pWe-?64$R"
+  }
+}
